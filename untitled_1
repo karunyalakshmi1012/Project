@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Day Trip Planner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #dff0d8;
+            color: #3c763d;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>One Day Trip Planner</h1>
+        <label for="city">City</label>
+        <select id="city">
+            <option value="Chennai">Chennai</option>
+            <option value="Coimbatore">Coimbatore</option>
+            <option value="Vellore">Vellore</option>
+            <option value="Bengalore">Bengalore</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Kerala">Kerala</option>
+        </select>
+
+        <label for="withWhom">With Whom</label>
+        <select id="withWhom">
+            <option value="Friends">Friends</option>
+            <option value="Family">Family</option>
+            <option value="Partner">Partner</option>
+            <option value="Alone">Alone</option>
+        </select>
+
+        <label for="timeConstraints">Time Constraints</label>
+        <input type="text" id="timeConstraints" placeholder="e.g., Morning, Afternoon, Evening">
+
+        <button id="searchBtn">Search</button>
+
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById("searchBtn").addEventListener("click", function () {
+            const city = document.getElementById("city").value;
+            const withWhom = document.getElementById("withWhom").value;
+
+            fetch(`http://127.0.0.1:5000/recommend?city=${city}&with_whom=${withWhom}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.recommendation) {
+                        document.getElementById("result").style.display = "block";
+                        document.getElementById("result").textContent = `Recommended places: ${data.recommendation}`;
+                    } else {
+                        document.getElementById("result").style.display = "block";
+                        document.getElementById("result").textContent = `Error: ${data.error}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById("result").style.display = "block";
+                    document.getElementById("result").textContent = "An error occurred while fetching recommendations.";
+                });
+        });
+    </script>
+</body>
+</html>
+
